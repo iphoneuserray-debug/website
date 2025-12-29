@@ -36,7 +36,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "app/home/dashboard/api/doughbutChart.js"  ],
   "exclude": [
     "node_modules"
   ]

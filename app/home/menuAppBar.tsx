@@ -18,6 +18,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import BusinessIcon from "@mui/icons-material/Business";
 import PeopleIcon from "@mui/icons-material/People";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 interface MenuAppBarProp {
   children?: React.ReactNode;
@@ -123,6 +124,7 @@ export default function MenuAppBar({ children }: MenuAppBarProp) {
         <Toolbar />
         <Box sx={{ width: 250 }} role="presentation">
           <List>
+            <ListButton name="Dashboard" icon={<DashboardIcon />} />
             <ListButton name="User-table" icon={<PeopleIcon />} />
             <ListButton name="Company-table" icon={<BusinessIcon />} />
           </List>

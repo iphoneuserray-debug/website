@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
+import readCompanyCsv, { RowData } from "../../api/companyCsvReader";
 
 const UserType = {
   Regular: 0,
@@ -13,7 +14,15 @@ const UserType = {
 
 const columns: GridColDef[] = [
   {
-    field: "name",
+    field: "company_code",
+    headerName: "Code",
+    type: "string",
+    headerAlign: "center",
+    align: "center",
+    flex: 2,
+  },
+  {
+    field: "company_name",
     headerName: "Name",
     type: "string",
     headerAlign: "center",
@@ -43,7 +52,13 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "right",
     valueGetter: (value, row) => {
-      return row.annualRevenue / row.employee;
+      return row.annual_revenue / row.employees;
+    },
+    valueFormatter: (value?: number) => {
+      if (value == null) {
+        return "";
+      }
+      return `${value.toFixed(2).toLocaleString()}`;
     },
     flex: 1,
   },
@@ -56,7 +71,7 @@ const columns: GridColDef[] = [
     flex: 1.5,
   },
   {
-    field: "foundedYear",
+    field: "founded_year",
     headerName: "Founded Year",
     type: "number",
     headerAlign: "center",
@@ -64,7 +79,7 @@ const columns: GridColDef[] = [
     flex: 1,
   },
   {
-    field: "annualRevenue",
+    field: "annual_revenue",
     headerName: "Annual Revenue",
     type: "number",
     headerAlign: "center",
@@ -72,7 +87,7 @@ const columns: GridColDef[] = [
     flex: 1,
   },
   {
-    field: "employee",
+    field: "employees",
     headerName: "Employee",
     type: "number",
     headerAlign: "center",
@@ -83,82 +98,50 @@ const columns: GridColDef[] = [
 
 export default function ColumnSelectorDisabledGrid() {
   const [userType, setUserType] = React.useState(UserType.Regular);
+  const [rows, setRows] = React.useState<RowData[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
-  const rows = [
-    {
-      id: 1,
-      name: "TechNova Solutions",
-      level: 3,
-      country: "United States",
-      city: "San Francisco",
-      foundedYear: 2015,
-      annualRevenue: 8500000,
-      employee: 145,
-    },
-    {
-      id: 2,
-      name: "Global Motors Inc",
-      level: 4,
-      country: "Germany",
-      city: "Stuttgart",
-      foundedYear: 1980,
-      annualRevenue: 42500000,
-      employee: 2800,
-    },
-    {
-      id: 3,
-      name: "BioHealth Pharma",
-      level: 2,
-      country: "Switzerland",
-      city: "Zurich",
-      foundedYear: 2008,
-      annualRevenue: 12000000,
-      employee: 320,
-    },
-    {
-      id: 4,
-      name: "Green Energy Corp",
-      level: 3,
-      country: "Denmark",
-      city: "Copenhagen",
-      foundedYear: 2012,
-      annualRevenue: 7500000,
-      employee: 180,
-    },
-    {
-      id: 5,
-      name: "FinSecure Bank",
-      level: 5,
-      country: "United Kingdom",
-      city: "London",
-      foundedYear: 1995,
-      annualRevenue: 68000000,
-      employee: 4200,
-    },
-  ];
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const data = await readCompanyCsv();
+        setRows(data.rows);
+      } catch (error) {
+        console.error("Error loading CSV data:", error);
+        setRows([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const columnVisibilityModel = React.useMemo(() => {
     if (userType === UserType.Detail) {
       return {
-        name: true,
+        company_code: false,
+        company_name: true,
         level: true,
         country: true,
         annualRevenuePerEmployee: true,
         city: true,
-        foundedYear: true,
-        annualRevenue: true,
-        employee: true,
+        founded_year: true,
+        annual_revenue: true,
+        employees: true,
       };
     }
     return {
-      name: true,
+      company_code: false,
+      company_name: true,
       level: true,
       country: true,
       annualRevenuePerEmployee: true,
       city: false,
-      foundedYear: false,
-      annualRevenue: false,
-      employee: false,
+      founded_year: false,
+      annual_revenue: false,
+      employees: false,
     };
   }, [userType]);
 
@@ -192,6 +175,8 @@ export default function ColumnSelectorDisabledGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
+        loading={loading}
+        getRowId={(row) => row.company_code}
         disableColumnSelector
         columnVisibilityModel={columnVisibilityModel}
         sx={{ width: 900, height: 450 }}

@@ -1,45 +1,31 @@
-1. 创建一个next.js项目
-2. 完成navigation bar（可扩展）
-3. 完成user和company表格(页面）（使用dummy data无需api）
+ask 1223:
 
-用户table：
-  姓名
-  邮箱
-  title/role
-  status
-  编辑（edit button)
-  操作  (actions button)
+完成以下data dashboard页面的组件开发
 
-公司table：
-名称
-等级
-国家
-盈利效率（背景着色）annual revenue/employees
+为companies数据创建一个dummy数据结构（摘取一部分）
+组件使用该数据结构进行计算显示
 
-二级table：
-城市
-创始日期（founded year）
-年盈利额 （annual revenue）
-员工数量 （employees）
+dashboard组件内容：
 
+数据卡：
+  公司数量
+  总收入（选择合适的单位）
+  覆盖国家（unique calculate)
+  员工数量（选择合适的单位）
 
-考虑页面布局和美化
+数据环（可交互）：
+  不同level的供应公司在全部公司中的占比（鼠标hover状态 + 数据表格）
 
-    // <TableContainer component={Paper}>
-    //   <Table aria-label="collapsible table">
-    //     <TableHead>
-    //       <TableRow>
-    //         <TableCell />
-    //         <TableCell>Company Name</TableCell>
-    //         <TableCell>Level</TableCell>
-    //         <TableCell>Country</TableCell>
-    //         <TableCell>annual revenue/employees</TableCell>
-    //       </TableRow>
-    //     </TableHead>
-    //     <TableBody>
-    //       {rows.map((row, index) => (
-    //         <Row key={`${row.name}-${index}`} row={row} />
-    //       ))}
-    //     </TableBody>
-    //   </Table>
-    // </TableContainer>
+折线图（可交互）：
+  展示随年份增长，加入供应链网络公司的数量（累积数字）
+
+可视化工具库：
+
+chart.js
+https://www.chartjs.org/docs/latest/samples/information.html
+
+npm install
+
+录制：Daniel的快速会议
+日期：2025-12-23 20:03:55
+录制文件：https://meeting.tencent.com/crm/lJLxvxRJ27
