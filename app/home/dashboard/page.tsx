@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Grid2, Stack } from "@mui/material";
+import { Grid2, Paper, Stack } from "@mui/material";
 import MenuAppBar from "../menuAppBar";
 import DataCard from "./dataCard";
 import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
@@ -21,6 +21,8 @@ import {
   LineElement,
   Title,
 } from "chart.js";
+import Table from "./multiDimensionalTabs";
+import BasicTabs from "./multiDimensionalTabs";
 
 export default function DashboardPage() {
   const [companyData, setCompanyData] = React.useState<CompanyData>();
@@ -147,9 +149,16 @@ export default function DashboardPage() {
                 alignItems: "center",
               }}
             >
-              <Line data={lineData} />
-              <Doughnut data={doughnutData} />
+              <Paper elevation={1}>
+                <Line data={lineData} />
+              </Paper>
+              <Paper elevation={1}>
+                <Doughnut data={doughnutData} />
+              </Paper>
             </Stack>
+          </Grid2>
+          <Grid2 size={12}>
+            <BasicTabs />
           </Grid2>
         </Grid2>
       </MenuAppBar>

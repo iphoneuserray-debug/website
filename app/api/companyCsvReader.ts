@@ -82,24 +82,48 @@ function countCompanyByYear(year: number, companyByYear: Map<number, number>): M
     return companyByYear;
 }
 
+/**
+ * Add year not include in row data
+ * Formate company count each year into accumulative array
+ * @param companyByYear 
+ * @returns x and y coordinates in two sets of array
+ */
 function formateCompanyByYearData(companyByYear: Map<number, number>): {
   yearList: string[];
   companyCount: number[];
 } {
-    const years = Array.from(companyByYear.keys()).sort((a, b) => a - b);
-    const minYear = Math.min(...years);
-    const maxYear = Math.max(...years);
+    const filledMap = addMissingYear(companyByYear);
     
-    const yearList = new Array<string>();
-    const companyCount = new Array<number>();
+    const years = Array.from(filledMap.keys()).sort((a, b) => a - b);
+    
+    const yearList: string[] = [];
+    const companyCount: number[] = [];
     let cumulative = 0;
     
-    for (let year = minYear; year <= maxYear; year++){
-        if (companyByYear.has(year)) {
-            cumulative += companyByYear.get(year)!;
-    }
+    for (const year of years) {
+        cumulative += filledMap.get(year)!;
         yearList.push(year.toString());
         companyCount.push(cumulative);
     }
-    return {yearList, companyCount};
+    
+    return { yearList, companyCount };
+}
+
+function addMissingYear(companyByYear: Map<number, number>): Map<number, number>{
+    if (companyByYear.size === 0) {
+        return new Map();
+    }
+
+    const years = Array.from(companyByYear.keys()).sort((a, b) => a - b);
+    const minYear = Math.min(...years);
+    const maxYear = Math.max(...years);
+
+    const result = new Map<number, number>(companyByYear);
+
+    for (let year = minYear; year <= maxYear; year++){
+        if (! result.has(year)) {
+            result.set(year, 0);
+        }
+    }
+    return result;
 }
