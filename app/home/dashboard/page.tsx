@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { CircularProgress, Grid2, Paper, Stack } from "@mui/material";
+import { useEffect } from "react";
+import { CircularProgress, Paper, Stack } from "@mui/material";
 import MenuAppBar from "../menuAppBar";
-import DataCard from "./element/dataCard";
+import DataCard from "./components/dataCard";
 import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
 import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
@@ -21,7 +21,7 @@ import {
     LineElement,
     Title,
 } from "chart.js";
-import BasicTabs from "./tabs";
+import ChartTab from "./chartTab";
 
 export default function DashboardPage() {
     const [companyData, setCompanyData] = React.useState<CompanyData>();
@@ -55,6 +55,14 @@ export default function DashboardPage() {
         return (
             <MenuAppBar>
                 <CircularProgress />
+            </MenuAppBar>
+        );
+    }
+
+    if (companyData === undefined) {
+        return (
+            <MenuAppBar>
+                <h1>Data Fetch Error</h1>
             </MenuAppBar>
         );
     }
@@ -123,67 +131,61 @@ export default function DashboardPage() {
     };
 
     return (
-        <>
-            <MenuAppBar>
-                <Stack alignItems={"center"} spacing={2}>
-                    <Paper elevation={1} sx={{ width: "60vw" }}>
-                        <Line data={lineData} />
-                    </Paper>
-                    <Stack
-                        spacing={3}
-                        direction={"row"}
-                        alignContent={"baseline"}
-                    >
-                        <Stack padding={2} spacing={3}>
-                            <DataCard
-                                cardTitle="Company Number"
-                                cardData={companyCount}
-                                icon={
-                                    <ApartmentRoundedIcon
-                                        color="info"
-                                        sx={{ fontSize: 90 }}
-                                    />
-                                }
-                            />
-                            <DataCard
-                                cardTitle="Revenue"
-                                cardData={totalRevenue}
-                                icon={
-                                    <PaidRoundedIcon
-                                        color="info"
-                                        sx={{ fontSize: 90 }}
-                                    />
-                                }
-                            />
-                            <DataCard
-                                cardTitle="Country"
-                                cardData={countryCount}
-                                icon={
-                                    <PublicRoundedIcon
-                                        color="info"
-                                        sx={{ fontSize: 90 }}
-                                    />
-                                }
-                            />
-                            <DataCard
-                                cardTitle="Employee"
-                                cardData={totalEmployee}
-                                icon={
-                                    <PeopleAltRoundedIcon
-                                        color="info"
-                                        sx={{ fontSize: 90 }}
-                                    />
-                                }
-                            />
-                        </Stack>
-
-                        <Paper elevation={1} sx={{ width: "40vw" }}>
-                            <Doughnut data={doughnutData} options={options} />
-                        </Paper>
+        <MenuAppBar>
+            <Stack alignItems={"center"} spacing={2}>
+                <Paper elevation={1} sx={{ width: "75vw" }}>
+                    <Line data={lineData} />
+                </Paper>
+                <Stack spacing={3} direction={"row"} alignContent={"baseline"}>
+                    <Stack padding={2} spacing={3}>
+                        <DataCard
+                            cardTitle="Company Number"
+                            cardData={companyCount}
+                            icon={
+                                <ApartmentRoundedIcon
+                                    color="info"
+                                    sx={{ fontSize: 90 }}
+                                />
+                            }
+                        />
+                        <DataCard
+                            cardTitle="Revenue"
+                            cardData={totalRevenue}
+                            icon={
+                                <PaidRoundedIcon
+                                    color="info"
+                                    sx={{ fontSize: 90 }}
+                                />
+                            }
+                        />
+                        <DataCard
+                            cardTitle="Country"
+                            cardData={countryCount}
+                            icon={
+                                <PublicRoundedIcon
+                                    color="info"
+                                    sx={{ fontSize: 90 }}
+                                />
+                            }
+                        />
+                        <DataCard
+                            cardTitle="Employee"
+                            cardData={totalEmployee}
+                            icon={
+                                <PeopleAltRoundedIcon
+                                    color="info"
+                                    sx={{ fontSize: 90 }}
+                                />
+                            }
+                        />
                     </Stack>
-                    <BasicTabs companyData={companyData} />
+
+                    <Paper elevation={1} sx={{ width: "40vw" }}>
+                        <Doughnut data={doughnutData} options={options} />
+                    </Paper>
                 </Stack>
-            </MenuAppBar>
-        </>
+                <ChartTab companyData={companyData} />
+            </Stack>
+        </MenuAppBar>
     );
 }

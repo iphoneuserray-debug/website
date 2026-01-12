@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Box, Grid2 } from "@mui/material";
+import { Button, ButtonGroup, Grid2 } from "@mui/material";
 import { useState } from "react";
-import SelectBoard from "./selectBoard";
+import SelectBoard from "./components/selectBoard";
 import {
     Filter,
     handleUndefinedFilter,
@@ -22,13 +22,14 @@ import {
 import CompanyData from "@/app/api/CompanyData";
 import { Bar } from "react-chartjs-2";
 
-export default function SubTab({
-    dimension,
+export default function barChart({
     companyData,
 }: {
-    dimension: "level" | "country" | "city";
     companyData: CompanyData;
 }) {
+    const [dimension, setDimension] = useState<"level" | "country" | "city">(
+        "level"
+    );
     const [filter, setFilter] = useState<Filter>();
     const [data, setData] = useState<
         ChartData<"bar", (number | [number, number] | null)[], unknown>
@@ -47,7 +48,7 @@ export default function SubTab({
         };
         const map = requestBarChartData(request, companyData);
         setData(parseChartData(map));
-    }, [filter]);
+    }, [filter, dimension]);
 
     const options = {
         plugins: {
@@ -75,8 +76,21 @@ export default function SubTab({
     );
 
     return (
-        <Grid2 container spacing={2} width={"80vw"}>
-            <Grid2 size={9} spacing={2}>
+        <Grid2 container spacing={2}>
+            <Grid2 size={12}>
+                <ButtonGroup
+                    variant="text"
+                    aria-label="Dimension Button Group"
+                    fullWidth
+                >
+                    <Button onClick={() => setDimension("level")}>Level</Button>
+                    <Button onClick={() => setDimension("country")}>
+                        Country
+                    </Button>
+                    <Button onClick={() => setDimension("city")}>City</Button>
+                </ButtonGroup>
+            </Grid2>
+            <Grid2 size={9}>
                 <Bar options={options} data={data} />
             </Grid2>
             <Grid2 size={3}>

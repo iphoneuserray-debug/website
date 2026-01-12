@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Selector from "./element/selector";
-import { Button, CircularProgress, Stack } from "@mui/material";
-import RangeSlider from "./element/slider";
+import Selector from "./selector";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
+import RangeSlider from "./slider";
 import CompanyData from "@/app/api/CompanyData";
-import { Filter } from "../../api/requestProps";
+import { Filter } from "../../../api/requestProps";
 
 export default function SelectBoard({
     setFilter,
@@ -43,8 +43,36 @@ export default function SelectBoard({
         setFilter(filter);
     };
 
+    const handleRefresh = () => {
+        setLevel([]);
+        setCountry([]);
+        setCity([]);
+        setFoundYear([-1, -1]);
+        setAnnualRevenue([-1, -1]);
+        setEmployee([-1, -1]);
+        const filter: Filter = {
+            level: [],
+            country: [],
+            city: [],
+            founded_year: {
+                min: -1,
+                max: -1,
+            },
+            annual_revenue: {
+                min: -1,
+                max: -1,
+            },
+            employees: {
+                min: -1,
+                max: -1,
+            },
+        };
+        setFilter(filter);
+    };
+
     return (
-        <Stack spacing={0.5}>
+        <Stack spacing={1}>
+            <Box height={20}></Box>
             <Selector
                 field="level"
                 value={companyData.level
@@ -80,8 +108,12 @@ export default function SelectBoard({
                 max={companyData.revenueRengeAndEmployeeRange.employee.max}
                 handleChange={setEmployee}
             />
+
             <Button variant="contained" onClick={handleClick} size="small">
                 Done
+            </Button>
+            <Button variant="outlined" onClick={handleRefresh} size="small">
+                Refresh
             </Button>
         </Stack>
     );

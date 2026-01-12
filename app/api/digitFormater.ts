@@ -13,5 +13,5 @@ export function digitFormater(cardData: number | string): {num: string, unit: st
         unit = "T";
     }
 
-    return {num: cardData.toFixed(0).toString(), unit: unit};
+    return {num: cardData.toFixed(0).toLocaleString(), unit: unit};
 }

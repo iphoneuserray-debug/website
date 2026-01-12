@@ -1,4 +1,3 @@
-import { RequstProps } from './requestProps';
 import { isObject } from 'chart.js/helpers';
 import Papa from 'papaparse';
 import { RowData } from './rowData';
@@ -74,7 +73,8 @@ export default class CompanyData{
     }
 
 
-    updateStats(): void {
+
+    private updateStats(): void {
         for (const row of this._rows) {
             this._totalCompany++;
             this._totalEmployee += row.employees;

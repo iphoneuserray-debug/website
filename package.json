@@ -20,6 +20,7 @@
     "@mui/x-data-grid-generator": "^8.22.1",
     "chart.js": "^4.5.1",
     "csv-parser": "^3.2.0",
+    "d3": "^7.9.0",
     "fs": "^0.0.1-security",
     "next": "^15.5.9",
     "papaparse": "^5.5.3",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/d3": "^7.4.3",
     "@types/node": "^20.19.27",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",

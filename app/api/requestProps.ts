@@ -35,40 +35,9 @@ export function requestBarChartData(request: RequstProps, companyData: CompanyDa
 Map<string | number, number> {
     const result = new Map<number | string, number>();
     for(const row of companyData.rows) {
-        // Check fliter
-        let inCondition = true;
-        for (const key in request.filter) {
-            const value = request.filter[key as keyof Filter];
-            const rowValue = row[key as keyof RowData];
-            // Check selector
-            if (Array.isArray(value) && value.length !== 0){
-                if (typeof value[0] === 'number'){
-                    if (!(value as number[]).includes(rowValue as number)) {
-                        inCondition = false;
-                        break;
-                    }
-                } else {
-                    if (!(value as string[]).includes(rowValue as string)) {
-                        inCondition = false;
-                        break;
-                    }
-                }
-            } // Check slider value
-            else if ('min' in value && 'max' in value) {
-                const rowValue = row[key as keyof RowData] as number;
-                const min = value.min; 
-                const max = value.max;
-                // Handle uninitialised status
-                if (max < 0 || min < 0) continue;
-                // Refuse value if not in range
-                else if (rowValue > max || rowValue < min) {
-                    inCondition = false;
-                    break;
-                }
-            }
-        }
+        
         // Add count the company if satisfied filter
-        if (inCondition) {
+        if (filterHandler(request.filter, row)) {
             const dimesionValue = row[request.dimension];
             if (! result.has(dimesionValue)){
                 result.set(dimesionValue,  1);
@@ -80,6 +49,42 @@ Map<string | number, number> {
     };
     console.log(result);
     return result;
+}
+
+function filterHandler(filter: Filter, row: RowData): boolean {
+    // Check fliter
+    let inCondition = true;
+    for (const key in filter) {
+        const value = filter[key as keyof Filter];
+        const rowValue = row[key as keyof RowData];
+        // Check selector
+        if (Array.isArray(value) && value.length !== 0){
+            if (typeof value[0] === 'number'){
+                if (!(value as number[]).includes(rowValue as number)) {
+                    inCondition = false;
+                    break;
+                }
+            } else {
+                if (!(value as string[]).includes(rowValue as string)) {
+                    inCondition = false;
+                    break;
+                }
+            }
+        } // Check slider value
+        else if ('min' in value && 'max' in value) {
+            const rowValue = row[key as keyof RowData] as number;
+            const min = value.min; 
+            const max = value.max;
+            // Handle uninitialised status
+            if (max < 0 || min < 0) continue;
+            // Refuse value if not in range
+            else if (rowValue > max || rowValue < min) {
+                inCondition = false;
+                break;
+            }
+        }
+    }
+    return inCondition;
 }
 
 // Assign default values to filter to avoid undefined case
@@ -130,4 +135,15 @@ export function parseChartData(map: Map<string | number, number>): ChartData<"ba
         
     };
     return data;
+}
+
+// Find all rows satify the filter
+export function relationFiltered(filter: Filter, companyData: CompanyData): RowData[] {
+    const result = [];
+    for (const row of companyData.rows){
+        if(filterHandler(filter, row)){
+            result.push(row);
+        }
+    }
+    return result;
 }
