@@ -1,159 +1,65 @@
 'use client';
 
 import * as React from 'react';
-import { Card } from '../shared-theme/customizations/card';
-import { Container } from '../shared-theme/customizations/container.tsx';
-import { Typography } from '@mui/material';
-import Link from '@mui/material/Link';
-import Divider from '@mui/material/Divider';
-import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import AlertDialog from './alertDialog';
+import { Container } from '../shared-components/container.tsx';
+import { validateInputs } from '../utils/validateInputs.ts';
+import Notification from '../shared-components/notification.tsx';
+import { useRouter } from 'next/navigation';
+import AuthCard from '../shared-components/authCard.tsx';
+import request from '../utils/request';
 
-export default function SignUp(props: { disableCustomTheme?: boolean }) {
+export default function SignUp() {
+    const router = useRouter();
     const [emailError, setEmailError] = React.useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
+    const [alertopen, setAlert] = React.useState(false);
+    const [alertMessage, setAlertMessage] = React.useState('');
 
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (emailError || passwordError) {
-          event.preventDefault();
-          return;
+            event.preventDefault();
+            return;
         }
         const data = new FormData(event.currentTarget);
-        
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
-        
-        setOpen(true);
-    }
-      
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-       
-        let isValid = true;
-        
-        if (!email.value){
-            setEmailError(true);
-            setEmailErrorMessage('Please enter an email address.');
-            isValid = false;
-        } else if (!/\S+@\S+\.\S+/.test(email.value)) {
-          setEmailError(true);
-          setEmailErrorMessage('Please enter a valid email address.');
-          isValid = false;
-        } else {
-          setEmailError(false);
-          setEmailErrorMessage('');
+        const account = { email: String(data.get('email') || ''), password: String(data.get('password') || '') };
+        // Sign up
+        try {
+            await request(`/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(account),
+            });
+            router.push(`/dashboard`);
+        } catch (error) {
+            if (error instanceof Error) {
+                setAlertMessage(error.message);
+            } else {
+                setAlertMessage(typeof error === 'string' ? error : 'Unknown error occurred');
+            }
+            setAlert(true);
         }
-    
-        if (!password.value) {
-          setPasswordError(true);
-          setPasswordErrorMessage('Please Enter the password.');
-          isValid = false;
-        } else if (!/\w{8,16}/.test(password.value)){
-            setPasswordError(true);
-            setPasswordErrorMessage('Password length must be between 8 to 16 characters or numbers.')
-            isValid = false;
-        }else {
-          setPasswordError(false);
-          setPasswordErrorMessage('');
-        }
-    
-        return isValid;
-      };
+    }
 
     return (
-    <Container direction="column" justifyContent="space-between">
-    <AlertDialog open={open} handleClose={handleClose} />
-    <Card  variant="outlined">
-        <Typography
-                    component="h1"
-                    variant="h4"
-                    sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-                  >
-                    Sign up
-        </Typography>
-        <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    noValidate
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '100%',
-                      gap: 2,
-                    }}
-        >
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                error={emailError}
-                helperText={emailErrorMessage}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                autoComplete="email"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={emailError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <TextField
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                name="password"
-                placeholder="••••••••"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={passwordError ? 'error' : 'primary'}
-              />
-            </FormControl>
-        
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                onClick={validateInputs}
-                >
-                Sign up
-            </Button>
-        </Box>
-        <Divider>or</Divider>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}></Box>
-        <Typography sx={{ textAlign: 'center' }}>
-            Already have an account?{' '}
-            <Link
-                href="/sign-in"
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
-            >
-                Sign in
-            </Link>
-        </Typography>
-    </Card>
-    </Container>)
+        <Container direction="column" justifyContent="space-between">
+            <Notification open={alertopen} message={alertMessage} setAlert={setAlert} />
+            <AuthCard
+                title="Sign up"
+                submitLabel="Sign up"
+                emailError={emailError}
+                emailErrorMessage={emailErrorMessage}
+                passwordError={passwordError}
+                passwordErrorMessage={passwordErrorMessage}
+                onSubmit={handleSubmit}
+                onValidateClick={() => validateInputs({ setEmailError, setEmailErrorMessage, setPasswordError, setPasswordErrorMessage })}
+                footerPrompt="Already have an account?"
+                footerLinkHref="/sign-in"
+                footerLinkText="Sign in"
+            />
+        </Container>
+    )
 }
