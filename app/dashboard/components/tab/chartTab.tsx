@@ -30,6 +30,7 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
+// Accessibility helpers for tab ids
 function a11yProps(index: number) {
     return {
         id: `full-width-tab-${index}`,
@@ -37,6 +38,7 @@ function a11yProps(index: number) {
     };
 }
 
+// Switchable chart tabs (bar/bubble)
 export default function ChartTab() {
     const theme = useTheme();
     const [value, setValue] = React.useState(0);

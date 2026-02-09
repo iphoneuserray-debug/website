@@ -2,9 +2,9 @@
 
 import { Box, Grid2, Typography } from "@mui/material";
 import MenuAppBar from "../shared-components/menuAppBar";
-import { Portrait } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import InfoCard from "./components/infoCard";
+import Portrait from "./components/portrait";
 import { Role } from "../types/account.interface";
 import request from "@/app/utils/request";
 
@@ -33,7 +33,7 @@ export default function UserTablePage() {
             </Box>
             <Grid2 container spacing={3} width={"80vw"} ml={5}>
                 <Grid2 size={3}>
-                    {role ? <Portrait data-role={role} /> : <></>}
+                    {role ? <Portrait role={role} /> : <></>}
                 </Grid2>
                 <Grid2 size={9}>
                     {email ? <InfoCard email={email} /> : <></>}

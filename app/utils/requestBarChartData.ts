@@ -5,6 +5,7 @@ import request from "./request";
 
 export async function requestBarChartData(requestProps: RequstProps):
     Promise<ChartData<"bar", (number | [number, number] | null)[], unknown>> {
+    // Aggregate companies by selected dimension to build bar chart data
     const result = new Map<number | string, number>();
     let companies: Company[];
     try {
@@ -15,6 +16,7 @@ export async function requestBarChartData(requestProps: RequstProps):
         return { datasets: [] };
     }
 
+    // Count companies per dimension value
     for (const row of companies) {
 
         const dimesionValue = row[requestProps.dimension];
@@ -30,7 +32,7 @@ export async function requestBarChartData(requestProps: RequstProps):
 
 }
 
-// Parse map into chart data
+// Parse aggregation map into chart.js data
 function parseChartData(map: Map<string | number, number>): ChartData<"bar", (number | [number, number] | null)[], unknown> {
     if (!map || map.size === 0) {
         return {

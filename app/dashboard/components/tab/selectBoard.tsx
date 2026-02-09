@@ -27,6 +27,7 @@ export default function SelectBoard({
     const [employee, setEmployee] = useState<number[]>([-1, -1]);
     const [panel, setPanel] = useState<Panel | undefined>(undefined);
 
+    // Load selectable filter options
     useEffect(() => {
         const loadPanel = async () => {
             try {
@@ -40,6 +41,7 @@ export default function SelectBoard({
         loadPanel();
     }, []);
 
+    // Apply current selections as filter
     const handleClick = () => {
         const filter: Filter = {
             level: level
@@ -63,6 +65,7 @@ export default function SelectBoard({
         setFilter(filter);
     };
 
+    // Reset selections and clear filter
     const handleRefresh = () => {
         setLevel([]);
         setCountry([]);

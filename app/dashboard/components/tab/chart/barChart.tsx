@@ -28,7 +28,7 @@ export default function barChart() {
         datasets: [{ data: [] }],
     });
 
-    // When filter changes, request bar-chart data from backend
+    // When filter/dimension changes, request bar-chart data from backend
     React.useEffect(() => {
         const load = async () => {
             const request: RequstProps = {
@@ -76,6 +76,7 @@ export default function barChart() {
                     aria-label="Dimension Button Group"
                     fullWidth
                 >
+                    {/* Select aggregation dimension */}
                     <Button onClick={() => setDimension("level")}>Level</Button>
                     <Button onClick={() => setDimension("country")}>
                         Country

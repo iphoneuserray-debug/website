@@ -54,6 +54,7 @@ export default function DashboardPage() {
     let companyByYear = new Array<number>();
     let levelList = new Array<string>();
 
+    // Load widget data used by cards and charts
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -98,6 +99,7 @@ export default function DashboardPage() {
             .map((value) => "Level " + value.toString());
     }
 
+    // Register chart.js components once before rendering charts
     Chart.register(
         ArcElement,
         Tooltip,
@@ -109,6 +111,7 @@ export default function DashboardPage() {
         Title
     );
 
+    // Doughnut chart for company distribution by level
     const doughnutData = {
         datasets: [
             {
@@ -132,6 +135,7 @@ export default function DashboardPage() {
         radius: "80%",
     };
 
+    // Line chart for company count over years
     const lineData = {
         labels: yearList,
 

@@ -42,6 +42,7 @@ export default function Bubble({
 
         svg.selectAll("*").remove();
 
+        // Build packed hierarchy sized by revenue
         const hierarchy = d3
             .hierarchy(data)
             .sort(
@@ -151,6 +152,7 @@ export default function Bubble({
             .text((d) => getLabelText(d, 1))
             .attr("clip-path", (d) => `circle(${d.r})`);
 
+        // Tooltip layer (text + background)
         const tooltip = svg
             .append("g")
             .style("opacity", 0)

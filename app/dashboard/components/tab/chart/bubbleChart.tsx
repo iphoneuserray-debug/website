@@ -27,7 +27,7 @@ export default function BubbleChart() {
     const [rows, setRows] = useState<Company[]>([]);
     const [level, setLevel] = useState<number>(0);
 
-    // Async function handler
+    // Initial load of companies, levels, and relation tree
     React.useEffect(() => {
         const loadData = async () => {
             try {
@@ -50,6 +50,7 @@ export default function BubbleChart() {
         loadData();
     }, []);
 
+    // Refresh relation tree when filters change
     useEffect(() => {
         const load = async () => {
             try {
@@ -61,7 +62,7 @@ export default function BubbleChart() {
         load();
     }, [filter]);
 
-    // Show the company info on right handside
+    // Build info card text for the hovered company
     useEffect(() => {
         JSON.stringify(currentNode);
         if (!currentNode) {

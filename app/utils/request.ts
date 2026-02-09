@@ -1,10 +1,15 @@
+/**
+ * Wrapper around fetch that adds base API URL, cookies, and error handling.
+ */
 export default async function request(input: string | URL, init?: RequestInit) {
 
+    // Always include credentials for session-based auth
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${input}`, {
         credentials: "include",
         ...init,
     });
 
+    // Parse and throw a helpful error message
     if (!response.ok) {
         let message = `Request failed: ${response.status} ${response.statusText}`;
         try {
@@ -22,6 +27,7 @@ export default async function request(input: string | URL, init?: RequestInit) {
         throw new Error(message);
     }
 
+    // Return JSON when available, otherwise return text
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
         return await response.json();

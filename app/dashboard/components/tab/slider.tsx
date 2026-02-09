@@ -23,6 +23,7 @@ export default function RangeSlider({
         handleChange([min, max]);
     }, [min, max]);
 
+    // Reset slider
     useEffect(() => {
         if (!selected) return;
         if (selected[0] === -1 && selected[1] === -1) {

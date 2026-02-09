@@ -7,11 +7,13 @@ interface ValidateInputsProps {
 }
 
 export const validateInputs = ({ setEmailError, setEmailErrorMessage, setPasswordError, setPasswordErrorMessage }: ValidateInputsProps) => {
+    // Read values directly from input elements
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
     let isValid = true;
 
+    // Validate email format
     if (!email.value) {
         setEmailError(true);
         setEmailErrorMessage('Please enter an email address.');
@@ -25,6 +27,7 @@ export const validateInputs = ({ setEmailError, setEmailErrorMessage, setPasswor
         setEmailErrorMessage('');
     }
 
+    // Validate password length/format
     if (!password.value) {
         setPasswordError(true);
         setPasswordErrorMessage('Please Enter the password.');

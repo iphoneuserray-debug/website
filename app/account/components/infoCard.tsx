@@ -36,7 +36,7 @@ export default function InfoCard({ email }: { email: string }) {
             postcode: formData.postcode,
             about: formData.about,
         };
-
+        // Update user name and other account infomation
         try {
             const accountData = await request(`/accounts/${email}`, {
                 method: "PATCH",
@@ -63,6 +63,7 @@ export default function InfoCard({ email }: { email: string }) {
 
     useEffect(() => {
         (async () => {
+            // Get user name and other account infomation
             try {
                 const accountData = await request(`/accounts/${email}`, {
                     method: "GET",
